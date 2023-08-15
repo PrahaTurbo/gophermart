@@ -57,7 +57,7 @@ func extractUserIDFromCtx(ctx context.Context) (int, error) {
 	return userID, nil
 }
 
-func amountToDecimalString(amount int) float64 {
+func amountToFloat64(amount int) float64 {
 	const amountDivider = 100
 
 	return float64(amount) / amountDivider

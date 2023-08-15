@@ -126,12 +126,13 @@ func (a *application) getOrdersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
 	if err := json.NewEncoder(w).Encode(orders); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
 }
 
 func (a *application) balanceHandler(w http.ResponseWriter, r *http.Request) {
@@ -142,6 +143,8 @@ func (a *application) balanceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
 	if err := json.NewEncoder(w).Encode(balance); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -190,10 +193,11 @@ func (a *application) withdrawalsHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
 	if err := json.NewEncoder(w).Encode(withdrawals); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
 }

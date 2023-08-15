@@ -13,9 +13,9 @@ type OrderResponse struct {
 }
 
 type AccrualResponse struct {
-	Order   string `json:"order"`
-	Status  string `json:"status"`
-	Accrual int    `json:"accrual"`
+	Order   string  `json:"order"`
+	Status  string  `json:"status"`
+	Accrual float64 `json:"accrual"`
 }
 
 type BalanceResponse struct {
@@ -24,8 +24,8 @@ type BalanceResponse struct {
 }
 
 type WithdrawRequest struct {
-	Order string `json:"order"`
-	Sum   int    `json:"sum"`
+	Order string  `json:"order"`
+	Sum   float64 `json:"sum"`
 }
 
 type WithdrawalsResponse struct {

@@ -34,7 +34,7 @@ func NewService(
 	}
 
 	s.log.Info().Msg("starting accrual updater")
-	go s.startAccrualUpdater(time.Second*10, 100)
+	go s.startAccrualUpdater(time.Second*3, 50)
 
 	return s
 }
@@ -152,7 +152,7 @@ func (s *Service) GetUserOrders(ctx context.Context) ([]models.OrderResponse, er
 		}
 
 		if order.Status == OrderProcessed {
-			o.Accrual = amountToDecimalString(order.Accrual)
+			o.Accrual = amountToFloat64(order.Accrual)
 		}
 
 		resp[i] = o
@@ -175,8 +175,8 @@ func (s *Service) GetBalance(ctx context.Context) (*models.BalanceResponse, erro
 	}
 
 	resp := &models.BalanceResponse{
-		Current:   amountToDecimalString(balance.Current),
-		Withdrawn: amountToDecimalString(balance.Withdrawn),
+		Current:   amountToFloat64(balance.Current),
+		Withdrawn: amountToFloat64(balance.Withdrawn),
 	}
 
 	return resp, nil
@@ -198,7 +198,7 @@ func (s *Service) Withdraw(ctx context.Context, req models.WithdrawRequest) erro
 	withdraw := entity.Withdraw{
 		UserID:  userID,
 		OrderID: req.Order,
-		Sum:     req.Sum * amountMultiplier,
+		Sum:     int(req.Sum * amountMultiplier),
 	}
 
 	balance, err := s.storage.GetBalance(ctx, userID)
@@ -239,7 +239,7 @@ func (s *Service) GetUserWithdrawals(ctx context.Context) ([]models.WithdrawalsR
 	for i, withdraw := range withdrawals {
 		w := models.WithdrawalsResponse{
 			Order:       withdraw.OrderID,
-			Sum:         amountToDecimalString(withdraw.Sum),
+			Sum:         amountToFloat64(withdraw.Sum),
 			ProcessedAt: withdraw.ProcessedAt.Format(time.RFC3339),
 		}
 
@@ -284,7 +284,7 @@ func (s *Service) handleAccrualUpdater(orders []entity.Order) {
 					continue
 				}
 
-				order.Accrual = resp.Accrual * amountMultiplier
+				order.Accrual = int(resp.Accrual * amountMultiplier)
 				order.Status = resp.Status
 
 				if err := s.storage.UpdateOrder(order); err != nil {
