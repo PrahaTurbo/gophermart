@@ -6,7 +6,6 @@ import (
 
 	"github.com/PrahaTurbo/gophermart/internal/auth"
 	"github.com/pkg/errors"
-	"github.com/shopspring/decimal"
 )
 
 const (
@@ -58,9 +57,8 @@ func extractUserIDFromCtx(ctx context.Context) (int, error) {
 	return userID, nil
 }
 
-func amountToDecimalString(amount int) decimal.Decimal {
+func amountToDecimalString(amount int) float64 {
 	const amountDivider = 100
 
-	return decimal.NewFromInt(int64(amount)).
-		Div(decimal.NewFromInt(amountDivider))
+	return float64(amount) / amountDivider
 }

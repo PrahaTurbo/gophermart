@@ -1,19 +1,15 @@
 package models
 
-import (
-	"github.com/shopspring/decimal"
-)
-
 type UserRequest struct {
 	Login    string `json:"login"`
 	Password string `json:"password"`
 }
 
 type OrderResponse struct {
-	ID         string          `json:"number"`
-	Accrual    decimal.Decimal `json:"accrual,omitempty"`
-	Status     string          `json:"status,omitempty"`
-	UploadedAt string          `json:"uploaded_at"`
+	ID         string  `json:"number"`
+	Accrual    float64 `json:"accrual"`
+	Status     string  `json:"status"`
+	UploadedAt string  `json:"uploaded_at"`
 }
 
 type AccrualResponse struct {
@@ -23,8 +19,8 @@ type AccrualResponse struct {
 }
 
 type BalanceResponse struct {
-	Current   decimal.Decimal `json:"current"`
-	Withdrawn decimal.Decimal `json:"withdrawn"`
+	Current   float64 `json:"current"`
+	Withdrawn float64 `json:"withdrawn"`
 }
 
 type WithdrawRequest struct {
@@ -33,7 +29,7 @@ type WithdrawRequest struct {
 }
 
 type WithdrawalsResponse struct {
-	Order       string          `json:"order"`
-	Sum         decimal.Decimal `json:"sum"`
-	ProcessedAt string          `json:"processed_at"`
+	Order       string  `json:"order"`
+	Sum         float64 `json:"sum"`
+	ProcessedAt string  `json:"processed_at"`
 }
