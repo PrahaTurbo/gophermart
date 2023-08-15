@@ -130,6 +130,8 @@ func (a *application) getOrdersHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func (a *application) balanceHandler(w http.ResponseWriter, r *http.Request) {
@@ -192,4 +194,6 @@ func (a *application) withdrawalsHandler(w http.ResponseWriter, r *http.Request)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 }
