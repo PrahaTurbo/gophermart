@@ -112,14 +112,14 @@ func Test_application_registerUserHandler(t *testing.T) {
 			request := httptest.NewRequest(http.MethodPost, "/api/user/register", reader)
 
 			w := httptest.NewRecorder()
+			defer w.Result().Body.Close()
+
 			app.registerUserHandler(w, request)
 
 			assert.Equal(t, tt.want.statusCode, w.Code)
 
 			if tt.want.cookie != nil {
 				cookie := w.Result().Cookies()[0]
-				defer w.Result().Body.Close()
-
 				assert.Equal(t, tt.want.cookie.Name, cookie.Name)
 				assert.NotEmpty(t, cookie.Value)
 			}
@@ -207,14 +207,14 @@ func Test_application_loginUserHandler(t *testing.T) {
 			request := httptest.NewRequest(http.MethodPost, "/api/user/login", reader)
 
 			w := httptest.NewRecorder()
+			defer w.Result().Body.Close()
+
 			app.loginUserHandler(w, request)
 
 			assert.Equal(t, tt.want.statusCode, w.Code)
 
 			if tt.want.cookie != nil {
 				cookie := w.Result().Cookies()[0]
-				defer w.Result().Body.Close()
-
 				assert.Equal(t, tt.want.cookie.Name, cookie.Name)
 				assert.NotEmpty(t, cookie.Value)
 			}
