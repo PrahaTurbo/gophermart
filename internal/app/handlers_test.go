@@ -118,6 +118,8 @@ func Test_application_registerUserHandler(t *testing.T) {
 
 			if tt.want.cookie != nil {
 				cookie := w.Result().Cookies()[0]
+				defer w.Result().Body.Close()
+
 				assert.Equal(t, tt.want.cookie.Name, cookie.Name)
 				assert.NotEmpty(t, cookie.Value)
 			}
@@ -211,6 +213,8 @@ func Test_application_loginUserHandler(t *testing.T) {
 
 			if tt.want.cookie != nil {
 				cookie := w.Result().Cookies()[0]
+				defer w.Result().Body.Close()
+
 				assert.Equal(t, tt.want.cookie.Name, cookie.Name)
 				assert.NotEmpty(t, cookie.Value)
 			}
