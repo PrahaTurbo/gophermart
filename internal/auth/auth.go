@@ -9,7 +9,7 @@ import (
 
 type UserIDKeyType string
 
-const jwtTokenCookieName string = "token"
+const JWTTokenCookieName string = "token"
 const UserIDKey UserIDKeyType = "userID"
 
 type Claims struct {
@@ -28,7 +28,7 @@ func CreateJWTAuthCookie(userID int, jwtSecret string) (*http.Cookie, error) {
 	}
 
 	cookie := &http.Cookie{
-		Name:     jwtTokenCookieName,
+		Name:     JWTTokenCookieName,
 		Value:    tokenString,
 		HttpOnly: true,
 		Path:     "/",
@@ -40,7 +40,7 @@ func CreateJWTAuthCookie(userID int, jwtSecret string) (*http.Cookie, error) {
 func Auth(jwtSecret string) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			cookie, err := r.Cookie(jwtTokenCookieName)
+			cookie, err := r.Cookie(JWTTokenCookieName)
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
 				return

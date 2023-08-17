@@ -16,8 +16,6 @@ const (
 	OrderProcessed  = "PROCESSED"
 )
 
-const amountMultiplier = 100
-
 var (
 	ErrInvalidOrderID     = errors.New("order id didn't pass luhn algorithm validation")
 	ErrOrderByAnotherUser = errors.New("order was uploaded by another user")
@@ -61,4 +59,10 @@ func amountToFloat64(amount int) float64 {
 	const amountDivider = 100
 
 	return float64(amount) / amountDivider
+}
+
+func amountToInt(amount float64) int {
+	const amountMultiplier = 100
+
+	return int(amount * amountMultiplier)
 }

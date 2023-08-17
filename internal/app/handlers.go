@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (a *application) registerHandler(w http.ResponseWriter, r *http.Request) {
+func (a *application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
 	var user models.UserRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
@@ -49,7 +49,7 @@ func (a *application) registerHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (a *application) loginHandler(w http.ResponseWriter, r *http.Request) {
+func (a *application) loginUserHandler(w http.ResponseWriter, r *http.Request) {
 	var user models.UserRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
@@ -81,7 +81,7 @@ func (a *application) loginHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (a *application) ordersHandler(w http.ResponseWriter, r *http.Request) {
+func (a *application) processOrderHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -135,7 +135,7 @@ func (a *application) getOrdersHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *application) balanceHandler(w http.ResponseWriter, r *http.Request) {
+func (a *application) getBalanceHandler(w http.ResponseWriter, r *http.Request) {
 	balance, err := a.service.GetBalance(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -180,7 +180,7 @@ func (a *application) withdrawHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (a *application) withdrawalsHandler(w http.ResponseWriter, r *http.Request) {
+func (a *application) getWithdrawalsHandler(w http.ResponseWriter, r *http.Request) {
 	withdrawals, err := a.service.GetUserWithdrawals(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

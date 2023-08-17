@@ -14,7 +14,20 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type Service struct {
+type Service interface {
+	CreateUser(ctx context.Context, userReq models.UserRequest) (int, error)
+	LoginUser(ctx context.Context, userReq models.UserRequest) (int, error)
+
+	ProcessOrder(ctx context.Context, orderID string) error
+	GetUserOrders(ctx context.Context) ([]models.OrderResponse, error)
+
+	GetBalance(ctx context.Context) (*models.BalanceResponse, error)
+
+	Withdraw(ctx context.Context, req models.WithdrawRequest) error
+	GetUserWithdrawals(ctx context.Context) ([]models.WithdrawalsResponse, error)
+}
+
+type service struct {
 	log                logger.Logger
 	storage            storage.Repository
 	accrualClient      *client.AccrualClient
@@ -26,7 +39,7 @@ func NewService(
 	accrualClient *client.AccrualClient,
 	logger logger.Logger,
 ) Service {
-	s := Service{
+	s := service{
 		log:                logger,
 		storage:            storage,
 		accrualClient:      accrualClient,
@@ -36,10 +49,10 @@ func NewService(
 	s.log.Info().Msg("starting accrual updater")
 	go s.startAccrualUpdater(time.Second*3, 50)
 
-	return s
+	return &s
 }
 
-func (s *Service) CreateUser(ctx context.Context, userReq models.UserRequest) (int, error) {
+func (s *service) CreateUser(ctx context.Context, userReq models.UserRequest) (int, error) {
 	passHash, err := bcrypt.GenerateFromPassword([]byte(userReq.Password), bcrypt.DefaultCost)
 	if err != nil {
 		s.log.Error().Err(err).Str("login", userReq.Login).Msg("failed to create hash from password")
@@ -65,7 +78,7 @@ func (s *Service) CreateUser(ctx context.Context, userReq models.UserRequest) (i
 	return userID, nil
 }
 
-func (s *Service) LoginUser(ctx context.Context, userReq models.UserRequest) (int, error) {
+func (s *service) LoginUser(ctx context.Context, userReq models.UserRequest) (int, error) {
 	savedUser, err := s.storage.GetUser(ctx, userReq.Login)
 	if err != nil {
 		s.log.Error().Err(err).Str("login", userReq.Login).Msg("cannot find user in database")
@@ -81,7 +94,7 @@ func (s *Service) LoginUser(ctx context.Context, userReq models.UserRequest) (in
 	return savedUser.ID, nil
 }
 
-func (s *Service) ProcessOrder(ctx context.Context, orderID string) error {
+func (s *service) ProcessOrder(ctx context.Context, orderID string) error {
 	userID, err := extractUserIDFromCtx(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msg("failed to extracrt user from context")
@@ -104,11 +117,11 @@ func (s *Service) ProcessOrder(ctx context.Context, orderID string) error {
 
 	if order != nil {
 		if order.UserID != userID {
-			s.log.Error().Err(ErrOrderByAnotherUser).Str("order", orderID).Int("user", userID).Send()
+			s.log.Info().Str("order", orderID).Int("user", userID).Msg(ErrOrderByAnotherUser.Error())
 			return ErrOrderByAnotherUser
 		}
 
-		s.log.Info().Err(ErrOrderByCurrentUser).Str("order", orderID).Int("user", userID).Send()
+		s.log.Info().Str("order", orderID).Int("user", userID).Msg(ErrOrderByCurrentUser.Error())
 		return ErrOrderByCurrentUser
 	}
 
@@ -130,7 +143,7 @@ func (s *Service) ProcessOrder(ctx context.Context, orderID string) error {
 	return nil
 }
 
-func (s *Service) GetUserOrders(ctx context.Context) ([]models.OrderResponse, error) {
+func (s *service) GetUserOrders(ctx context.Context) ([]models.OrderResponse, error) {
 	userID, err := extractUserIDFromCtx(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msg("failed to extracrt user from context")
@@ -161,7 +174,7 @@ func (s *Service) GetUserOrders(ctx context.Context) ([]models.OrderResponse, er
 	return resp, nil
 }
 
-func (s *Service) GetBalance(ctx context.Context) (*models.BalanceResponse, error) {
+func (s *service) GetBalance(ctx context.Context) (*models.BalanceResponse, error) {
 	userID, err := extractUserIDFromCtx(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msg("failed to extracrt user from context")
@@ -182,7 +195,7 @@ func (s *Service) GetBalance(ctx context.Context) (*models.BalanceResponse, erro
 	return resp, nil
 }
 
-func (s *Service) Withdraw(ctx context.Context, req models.WithdrawRequest) error {
+func (s *service) Withdraw(ctx context.Context, req models.WithdrawRequest) error {
 	userID, err := extractUserIDFromCtx(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msg("failed to extracrt user from context")
@@ -198,7 +211,7 @@ func (s *Service) Withdraw(ctx context.Context, req models.WithdrawRequest) erro
 	withdraw := entity.Withdraw{
 		UserID:  userID,
 		OrderID: req.Order,
-		Sum:     int(req.Sum * amountMultiplier),
+		Sum:     amountToInt(req.Sum),
 	}
 
 	balance, err := s.storage.GetBalance(ctx, userID)
@@ -222,7 +235,7 @@ func (s *Service) Withdraw(ctx context.Context, req models.WithdrawRequest) erro
 	return nil
 }
 
-func (s *Service) GetUserWithdrawals(ctx context.Context) ([]models.WithdrawalsResponse, error) {
+func (s *service) GetUserWithdrawals(ctx context.Context) ([]models.WithdrawalsResponse, error) {
 	userID, err := extractUserIDFromCtx(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msg("failed to extracrt user from context")
@@ -249,7 +262,7 @@ func (s *Service) GetUserWithdrawals(ctx context.Context) ([]models.WithdrawalsR
 	return resp, nil
 }
 
-func (s *Service) startAccrualUpdater(interval time.Duration, batchSize int) {
+func (s *service) startAccrualUpdater(interval time.Duration, batchSize int) {
 	ticker := time.NewTicker(interval)
 
 	var orders []entity.Order
@@ -272,7 +285,7 @@ func (s *Service) startAccrualUpdater(interval time.Duration, batchSize int) {
 	}
 }
 
-func (s *Service) handleAccrualUpdater(orders []entity.Order) {
+func (s *service) handleAccrualUpdater(orders []entity.Order) {
 	const maxRetryCount = 3
 
 	for _, order := range orders {
@@ -284,7 +297,7 @@ func (s *Service) handleAccrualUpdater(orders []entity.Order) {
 					continue
 				}
 
-				order.Accrual = int(resp.Accrual * amountMultiplier)
+				order.Accrual = amountToInt(resp.Accrual)
 				order.Status = resp.Status
 
 				if err := s.storage.UpdateOrder(order); err != nil {
