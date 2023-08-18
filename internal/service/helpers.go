@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/PrahaTurbo/gophermart/internal/auth"
 	"github.com/pkg/errors"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -22,6 +22,8 @@ var (
 	ErrOrderByCurrentUser = errors.New("order was uploaded by current user")
 
 	ErrBalanceNotEnough = errors.New("not enough funds on the balance")
+
+	ErrExtractFromContext = errors.New("cannot extract userID from context")
 )
 
 func validateLuhn(s string) bool {
@@ -49,7 +51,7 @@ func extractUserIDFromCtx(ctx context.Context) (int, error) {
 	userIDVal := ctx.Value(auth.UserIDKey)
 	userID, ok := userIDVal.(int)
 	if !ok {
-		return 0, fmt.Errorf("cannot extract userID from context")
+		return 0, ErrExtractFromContext
 	}
 
 	return userID, nil
@@ -58,11 +60,21 @@ func extractUserIDFromCtx(ctx context.Context) (int, error) {
 func amountToFloat64(amount int) float64 {
 	const amountDivider = 100
 
-	return float64(amount) / amountDivider
+	d := decimal.NewFromInt(int64(amount)).Div(decimal.NewFromInt(amountDivider)).Round(2)
+	result, ok := d.Float64()
+
+	if !ok {
+		return float64(amount) / amountDivider
+	}
+
+	return result
 }
 
 func amountToInt(amount float64) int {
 	const amountMultiplier = 100
 
-	return int(amount * amountMultiplier)
+	d := decimal.NewFromFloat(amount).Mul(decimal.NewFromInt(amountMultiplier))
+	n := d.IntPart()
+
+	return int(n)
 }
