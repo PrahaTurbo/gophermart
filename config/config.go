@@ -9,8 +9,7 @@ type Config struct {
 	RunAddr        string
 	DatabaseURI    string
 	AccrualSysAddr string
-
-	JWTSecret string
+	JWTSecret      string
 }
 
 func Load() Config {

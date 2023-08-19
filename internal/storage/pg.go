@@ -12,6 +12,8 @@ import (
 
 const contextTimeoutSeconds = 3
 
+const uniqueViolationErrCode = "23505"
+
 type Repository interface {
 	SaveUser(ctx context.Context, user entity.User) (int, error)
 	GetUser(ctx context.Context, login string) (*entity.User, error)

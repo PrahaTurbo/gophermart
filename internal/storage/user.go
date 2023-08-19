@@ -2,11 +2,14 @@ package storage
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"time"
 
 	"github.com/PrahaTurbo/gophermart/internal/storage/entity"
 	"github.com/jackc/pgx/v5/pgconn"
 )
+
+var ErrAlreadyExist = errors.New("login already exist in database")
 
 func (s *Storage) SaveUser(ctx context.Context, user entity.User) (int, error) {
 	timeoutCtx, cancel := context.WithTimeout(ctx, time.Second*contextTimeoutSeconds)
