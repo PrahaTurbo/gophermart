@@ -4,8 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/PrahaTurbo/gophermart/internal/auth"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/PrahaTurbo/gophermart/internal/auth"
 )
 
 func Test_amountToFloat64(t *testing.T) {

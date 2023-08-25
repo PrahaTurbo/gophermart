@@ -5,11 +5,12 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/pkg/errors"
+
 	"github.com/PrahaTurbo/gophermart/internal/auth"
 	"github.com/PrahaTurbo/gophermart/internal/models"
 	"github.com/PrahaTurbo/gophermart/internal/service"
 	"github.com/PrahaTurbo/gophermart/internal/storage"
-	"github.com/pkg/errors"
 )
 
 func (a *application) registerUserHandler(w http.ResponseWriter, r *http.Request) {

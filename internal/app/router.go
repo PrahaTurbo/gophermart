@@ -1,9 +1,10 @@
 package app
 
 import (
-	"github.com/PrahaTurbo/gophermart/internal/auth"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+
+	"github.com/PrahaTurbo/gophermart/internal/auth"
 )
 
 func (a *application) Router() chi.Router {

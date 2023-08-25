@@ -4,10 +4,11 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/PrahaTurbo/gophermart/internal/logger"
-	"github.com/PrahaTurbo/gophermart/internal/storage/entity"
 	"github.com/pkg/errors"
 	"github.com/pressly/goose/v3"
+
+	"github.com/PrahaTurbo/gophermart/internal/logger"
+	"github.com/PrahaTurbo/gophermart/internal/storage/entity"
 )
 
 const contextTimeoutSeconds = 3

@@ -3,9 +3,10 @@ package service
 import (
 	"context"
 
-	"github.com/PrahaTurbo/gophermart/internal/auth"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
+
+	"github.com/PrahaTurbo/gophermart/internal/auth"
 )
 
 const (

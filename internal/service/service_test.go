@@ -7,15 +7,16 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/PrahaTurbo/gophermart/internal/auth"
 	"github.com/PrahaTurbo/gophermart/internal/logger"
 	"github.com/PrahaTurbo/gophermart/internal/mocks"
 	"github.com/PrahaTurbo/gophermart/internal/models"
 	"github.com/PrahaTurbo/gophermart/internal/storage"
 	"github.com/PrahaTurbo/gophermart/internal/storage/entity"
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type badContextKey string

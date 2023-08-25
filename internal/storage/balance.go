@@ -2,8 +2,9 @@ package storage
 
 import (
 	"context"
-	"github.com/PrahaTurbo/gophermart/internal/storage/entity"
 	"time"
+
+	"github.com/PrahaTurbo/gophermart/internal/storage/entity"
 )
 
 func (s *Storage) CreateBalance(ctx context.Context, userID int) error {

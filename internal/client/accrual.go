@@ -3,9 +3,10 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/PrahaTurbo/gophermart/internal/models"
 	"io"
 	"net/http"
+
+	"github.com/PrahaTurbo/gophermart/internal/models"
 )
 
 type AccrualClient struct {

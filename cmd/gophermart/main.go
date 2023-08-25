@@ -1,15 +1,16 @@
 package main
 
 import (
+	"net/http"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
+
 	"github.com/PrahaTurbo/gophermart/config"
 	"github.com/PrahaTurbo/gophermart/internal/app"
 	"github.com/PrahaTurbo/gophermart/internal/client"
 	"github.com/PrahaTurbo/gophermart/internal/logger"
 	"github.com/PrahaTurbo/gophermart/internal/service"
 	"github.com/PrahaTurbo/gophermart/internal/storage"
-	"net/http"
-
-	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 func main() {

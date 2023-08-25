@@ -7,14 +7,15 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
+
 	"github.com/PrahaTurbo/gophermart/internal/auth"
 	"github.com/PrahaTurbo/gophermart/internal/logger"
 	"github.com/PrahaTurbo/gophermart/internal/mocks"
 	"github.com/PrahaTurbo/gophermart/internal/models"
 	"github.com/PrahaTurbo/gophermart/internal/service"
 	"github.com/PrahaTurbo/gophermart/internal/storage"
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
 )
 
 func Test_application_registerUserHandler(t *testing.T) {

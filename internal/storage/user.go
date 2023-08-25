@@ -2,11 +2,12 @@ package storage
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"time"
 
-	"github.com/PrahaTurbo/gophermart/internal/storage/entity"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/pkg/errors"
+
+	"github.com/PrahaTurbo/gophermart/internal/storage/entity"
 )
 
 var ErrAlreadyExist = errors.New("login already exist in database")

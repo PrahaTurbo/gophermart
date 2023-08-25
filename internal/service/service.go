@@ -5,13 +5,14 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/pkg/errors"
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/PrahaTurbo/gophermart/internal/client"
 	"github.com/PrahaTurbo/gophermart/internal/logger"
 	"github.com/PrahaTurbo/gophermart/internal/models"
 	"github.com/PrahaTurbo/gophermart/internal/storage"
 	"github.com/PrahaTurbo/gophermart/internal/storage/entity"
-	"github.com/pkg/errors"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type Service interface {

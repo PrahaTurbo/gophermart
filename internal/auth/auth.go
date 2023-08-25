@@ -3,8 +3,9 @@ package auth
 import (
 	"context"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type UserIDKeyType string

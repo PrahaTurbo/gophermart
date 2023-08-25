@@ -1,9 +1,10 @@
 package app
 
 import (
+	"github.com/go-chi/chi/v5"
+
 	"github.com/PrahaTurbo/gophermart/internal/logger"
 	"github.com/PrahaTurbo/gophermart/internal/service"
-	"github.com/go-chi/chi/v5"
 )
 
 type App interface {
